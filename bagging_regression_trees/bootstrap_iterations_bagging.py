@@ -14,25 +14,37 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 
+n_reg = 10
 n_obs = 500
 n_sim = 50
 n_tree = 50
+sigma = 1
 
-X_train, y_train, f_train = simulation_class.simulation(n_reg = 10,
-                                   n_obs = n_obs,
-                                   n_sim = n_sim,
-                                   sigma = 1,
-                                   random_seed_design = 0,
-                                   random_seed_noise =  1
-                                   ).friedman_model()
 
-X_test, y_test, f_test = simulation_class.simulation(n_reg = 10,
-                                   n_obs = n_obs,
-                                   n_sim = n_sim,
-                                   sigma = 1,
-                                   random_seed_design = 2,
-                                   random_seed_noise = 3
-                                   ).friedman_model()
+
+train_setup = simulation_class.simulation(n_reg = n_reg,
+                                      n_obs = n_obs,
+                                      n_sim = n_sim,
+                                      sigma = sigma,
+                                      random_seed_design = 0,
+                                      random_seed_noise =  1
+                                      )
+
+
+test_setup = simulation_class.simulation(n_reg = n_reg,
+                                         n_obs = n_obs,
+                                         n_sim = n_sim,
+                                         sigma = sigma,
+                                         random_seed_design = 2,
+                                         random_seed_noise = 3
+                                         )
+
+f_train = train_setup.friedman_model()
+X_train, y_train = train_setup.error_term(f_train)
+
+f_test = test_setup.friedman_model()
+X_test, y_test = test_setup.error_term(f_test)
+
 
 mse_temp_bagging = np.empty(shape = (n_obs, n_sim))
 mse_temp_tree = np.empty(shape = (n_obs, n_sim))
